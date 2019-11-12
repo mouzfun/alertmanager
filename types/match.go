@@ -69,10 +69,11 @@ func (m *Matcher) Validate() error {
 // Match checks whether the label of the matcher has the specified
 // matching value.
 func (m *Matcher) Match(lset model.LabelSet) bool {
-	// Unset labels are treated as unset labels globally. Thus, if a
-	// label is not set we retrieve the empty label which is correct
-	// for the comparison below.
-	v := lset[model.LabelName(m.Name)]
+	v, ok:= lset[model.LabelName(m.Name)]
+	if !ok {
+		// missing label can't be matched with anything
+		return false
+	}
 
 	if m.IsRegex {
 		return m.regex.MatchString(string(v))

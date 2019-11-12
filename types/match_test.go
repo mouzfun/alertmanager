@@ -96,6 +96,12 @@ func TestMatcherMatch(t *testing.T) {
 		{matcher: Matcher{Name: "label", Value: "diffval.*", IsRegex: true}, expected: false},
 		//unset label
 		{matcher: Matcher{Name: "difflabel", Value: "value"}, expected: false},
+		{matcher: Matcher{Name: "difflabel", Value: "val.*", IsRegex: true}, expected: false},
+		{matcher: Matcher{Name: "difflabel", Value: `\S+`, IsRegex: true}, expected: false},
+		// label is unset  but we also test for the special cases with empty string/none or more regex matchers
+		// this should still be expected to be false because we effectively test for the label presence
+ 		{matcher: Matcher{Name: "difflabel", Value: ".*", IsRegex: true}, expected: false},
+		{matcher: Matcher{Name: "difflabel", Value: ""}, expected: false},
 	}
 
 	lset := model.LabelSet{"label": "value"}
